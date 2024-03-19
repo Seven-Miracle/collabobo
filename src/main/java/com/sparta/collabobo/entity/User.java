@@ -1,7 +1,12 @@
 package com.sparta.collabobo.entity;
 
+import com.sparta.collabobo.user.dto.request.SignupRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -16,7 +21,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column
@@ -32,6 +39,14 @@ public class User {
   private String nickname;
 
   @Column(nullable = false)
+  @Enumerated(value = EnumType.STRING)
   private UserRoleEnum role;
 
+  public User(SignupRequestDto requestDto, String password, UserRoleEnum role) {
+    this.username = requestDto.getUsername();
+    this.password = password;
+    this.email = requestDto.getEmail();
+    this.nickname = requestDto.getNickname();
+    this.role = role;
+  }
 }
