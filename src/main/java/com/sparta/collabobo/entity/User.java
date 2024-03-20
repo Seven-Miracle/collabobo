@@ -8,7 +8,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,7 @@ public class User {
   @Column(nullable = false)
   @Enumerated(value = EnumType.STRING)
   private UserRoleEnum role;
+
 
   public User(SignupRequestDto requestDto, String password, UserRoleEnum role) {
     this.username = requestDto.getUsername();
