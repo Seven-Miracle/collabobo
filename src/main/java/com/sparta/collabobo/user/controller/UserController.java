@@ -13,25 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/v1/users")
 public class UserController {
 
   private final UserService userService;
 
-  @GetMapping("/user/login-page")
+  @GetMapping("/login-page")
   public String loginPage() {
     return "login";
   }
 
-  @GetMapping("/user/signup")
+  @GetMapping("/signup")
   public String signupPage() {
     return "signup";
   }
 
-  @PostMapping("/user/signup")
-  public String singup(SignupRequestDto requestDto){
+  @PostMapping("/signup")
+  public String signup(SignupRequestDto requestDto){
     userService.signup(requestDto);
-    return "redirect:/api/user/login-page";
+    return "redirect:/v1/users/login-page";
   }
 
 }

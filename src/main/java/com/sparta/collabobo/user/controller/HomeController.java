@@ -13,5 +13,6 @@ public class HomeController {
   public String home(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
     model.addAttribute("username", userDetails.getUsername());
     return "index";
+
   }
 }
