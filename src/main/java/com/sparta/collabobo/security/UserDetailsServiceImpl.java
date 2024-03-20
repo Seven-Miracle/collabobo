@@ -24,10 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {//유저 찾아옴 => 유저 디테일생성
     User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("Not Found " + username));
-//    JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-//    QUser qUser = QUser.user;
-//    User user =  queryFactory.selectFrom(qUser)
-//        .where(qUser.username.eq(username)).fetchOne();
     return new UserDetailsImpl(user);
   }
 }
