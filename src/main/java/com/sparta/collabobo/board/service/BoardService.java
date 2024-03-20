@@ -7,7 +7,7 @@ import com.sparta.collabobo.board.entity.BoardUser;
 import com.sparta.collabobo.board.entity.BoardUser.InvitationStatus;
 import com.sparta.collabobo.board.repository.BoardRepository;
 import com.sparta.collabobo.board.repository.BoardUserRepository;
-import com.sparta.collabobo.user.entity.User;
+import com.sparta.collabobo.entity.User;
 import com.sparta.collabobo.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;

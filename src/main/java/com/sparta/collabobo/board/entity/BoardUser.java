@@ -1,6 +1,6 @@
 package com.sparta.collabobo.board.entity;
 
-import com.sparta.collabobo.user.entity.User;
+import com.sparta.collabobo.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
