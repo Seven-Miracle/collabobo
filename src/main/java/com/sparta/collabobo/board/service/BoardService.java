@@ -41,7 +41,6 @@ public class BoardService {
       throw new IllegalArgumentException("제목의 길이가 너무 짧거나 많습니다. ");
     }
 
-
     BoardEntity boardEntity = BoardEntity.builder()
         .user(user) // 연관관계 설정
         .title(requestDto.getTitle())
