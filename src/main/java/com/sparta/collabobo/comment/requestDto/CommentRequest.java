@@ -9,6 +9,4 @@ public class CommentRequest {
     private Long userId;
     private String content;
 
-
-
 }

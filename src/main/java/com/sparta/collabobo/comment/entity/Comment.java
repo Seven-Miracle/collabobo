@@ -1,7 +1,7 @@
 package com.sparta.collabobo.comment.entity;
 
 import com.sparta.collabobo.card.entity.Card;
-import com.sparta.collabobo.user.entity.User;
+import com.sparta.collabobo.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
