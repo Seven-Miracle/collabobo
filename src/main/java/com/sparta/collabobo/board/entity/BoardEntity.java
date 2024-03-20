@@ -1,22 +1,30 @@
 package com.sparta.collabobo.board.entity;
 
+import com.sparta.collabobo.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
+@Setter
 @Where(clause = "deleted_date IS NULL")
 @Builder
 @Table(name = "board")
@@ -48,6 +56,13 @@ public class BoardEntity {
   @Column
   @LastModifiedDate
   private LocalDateTime deletedDate;
+
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+
+  @OneToMany(mappedBy = "board")
+  private Set<BoardUser> collaborators = new HashSet<>();
 
   public boolean isValidColor(String color) {
     // 예시: 색상 코드 형식 (#FFFFFF) 검사 또는 지정된 색상 이름 검사
