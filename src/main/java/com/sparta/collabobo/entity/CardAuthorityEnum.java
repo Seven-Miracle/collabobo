@@ -1,0 +1,27 @@
+package com.sparta.collabobo.entity;
+
+import com.sparta.collabobo.exception.NotExistsEnumException;
+import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public enum CardAuthorityEnum {
+    WORKER("worker"), VIEWER("viewer");
+
+    private final String value;
+
+//    public static boolean validation(String type) {
+//        CardAuthorityEnum[] enums = values();
+//        for (CardAuthorityEnum target : enums) {
+//            if (target.name().equals(type)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//
+//    public static CardAuthorityEnum getEnum(String type) {
+//        return Arrays.stream(values()).filter(value -> value.name().equals(type)).findAny()
+//            .orElseThrow(NotExistsEnumException::new);
+//    }
+}

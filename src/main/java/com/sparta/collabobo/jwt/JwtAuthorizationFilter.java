@@ -39,14 +39,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       tokenValue = jwtUtil.substringToken(tokenValue);
       log.info(tokenValue);
 
-      if (!jwtUtil.validateToken(tokenValue)) {
-        log.error("Token Error");
-        return;
-      }
-
-      Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
-
-      try {
+      try{
+        Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
         setAuthentication(info.getSubject());// 유저이름 넘겨줌
       } catch (Exception e) {
         log.error(e.getMessage());

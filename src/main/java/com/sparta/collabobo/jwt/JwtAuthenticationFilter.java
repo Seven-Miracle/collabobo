@@ -22,7 +22,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   public JwtAuthenticationFilter(JwtUtil jwtUtil) {
     this.jwtUtil = jwtUtil;
-    setFilterProcessesUrl("/api/user/login");//login url
+    setFilterProcessesUrl("/v1/users/login");//login url
   }
 
   @Override
