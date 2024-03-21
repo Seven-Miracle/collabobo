@@ -4,15 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class CardRequest {
-    @NotBlank
-    private String title;
-    @NotBlank
-    private String content;
-    @NotBlank
-    private String color;
+public class StatusUpdateRequest {
     @NotBlank
     private String status;
-
-
 }
