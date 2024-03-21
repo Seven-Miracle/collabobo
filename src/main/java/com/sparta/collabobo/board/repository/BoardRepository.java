@@ -1,5 +1,9 @@
 package com.sparta.collabobo.board.repository;
 
-public interface BoardRepository {
+import com.sparta.collabobo.board.entity.BoardEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
+
+  boolean existsByTitle(String title);
 }
