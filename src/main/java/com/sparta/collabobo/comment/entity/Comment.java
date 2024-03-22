@@ -25,7 +25,7 @@ public class Comment {
     private Long commentId;
 
     @ManyToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class Comment {
     private LocalDateTime modifiedAt;
 
     @ManyToOne
-    @JoinColumn(name = "cardId")
+    @JoinColumn(name = "card_id")
     private Card card;
 
     public Comment(User user, String content, Card card) {

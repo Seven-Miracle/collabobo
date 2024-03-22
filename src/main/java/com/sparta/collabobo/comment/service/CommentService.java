@@ -54,7 +54,7 @@ public class CommentService {
     }
 
     public List<Comment> getCommentsByCardId(Long cardId) {
-        return commentRepository.findByCard_CardId(cardId);
+        return commentRepository.findByCard_Id(cardId);
     }
 
 }
