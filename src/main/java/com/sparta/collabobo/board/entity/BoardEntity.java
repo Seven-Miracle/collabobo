@@ -65,16 +65,54 @@ public class BoardEntity {
   private Set<BoardUser> collaborators = new HashSet<>();
 
   public boolean isValidColor(String color) {
-    // 예시: 색상 코드 형식 (#FFFFFF) 검사 또는 지정된 색상 이름 검사
+    // Check if color matches hex code pattern
     String colorPattern = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$";
-    return color.matches(colorPattern);
+    boolean matchesHexPattern = color.matches(colorPattern);
+
+    // Check if color is a predefined color name
+    boolean isPredefinedColor = PredefinedColor.contains(color.toUpperCase());
+
+    return matchesHexPattern || isPredefinedColor;
   }
 
   public void setColor(String color) {
     if (isValidColor(color)) {
-      this.color = color;
+      if (PredefinedColor.contains(color.toUpperCase())) {
+        // If color is a predefined color name, set its hex value
+        this.color = PredefinedColor.valueOf(color.toUpperCase()).getHexValue();
+      } else {
+        // Otherwise, color is already a valid hex code
+        this.color = color;
+      }
     } else {
-      throw new IllegalArgumentException("잘못된 색상 입니다.");
+      throw new IllegalArgumentException("잘못된 색상입니다.");
+    }
+  }
+
+  public enum PredefinedColor {
+    RED("#FF0000"),
+    GREEN("#00FF00"),
+    BLUE("#0000FF"),
+    BLACK("#000000"),
+    WHITE("#FFFFFF");
+
+    private final String hexValue;
+
+    PredefinedColor(String hexValue) {
+      this.hexValue = hexValue;
+    }
+
+    public String getHexValue() {
+      return hexValue;
+    }
+
+    public static boolean contains(String test) {
+      for (PredefinedColor c : PredefinedColor.values()) {
+        if (c.name().equalsIgnoreCase(test)) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 }

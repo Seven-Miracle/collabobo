@@ -27,13 +27,6 @@ public class TestSecurityConfig {
         return new InMemoryUserDetailsManager(user);
     }
 
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//            .csrf().disable()
-//            .authorizeRequests()
-//            .anyRequest().authenticated();
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
