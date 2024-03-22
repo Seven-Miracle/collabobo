@@ -112,7 +112,6 @@ public class BoardService {
     User user = userRepository.findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-    // Use the custom repository method to find the board
     BoardEntity boardEntity = boardRepository.findByIdIgnoringSoftDelete(boardId)
         .orElseThrow(() -> new IllegalArgumentException("삭제한 보드를 찾을 수 없습니다."));
 
