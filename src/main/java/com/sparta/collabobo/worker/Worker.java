@@ -32,8 +32,4 @@ public class Worker {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    @Column
-    @Enumerated(value = EnumType.STRING)
-    private CardAuthorityEnum role;
-
 }

@@ -82,4 +82,9 @@ public class Card {
         this.status = CardStatusEnum.valueOf(status);
         this.modified_at = LocalDateTime.now();
     }
+
+    public void updateCard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
