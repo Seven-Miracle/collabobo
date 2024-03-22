@@ -3,6 +3,7 @@ package com.sparta.collabobo.board.controller;
 import com.sparta.collabobo.board.dto.requestdto.BoardRequestDto;
 import com.sparta.collabobo.board.dto.responsedto.BoardResponseDto;
 import com.sparta.collabobo.board.service.BoardService;
+import com.sparta.collabobo.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,6 +47,12 @@ public class BoardController {
       @PathVariable Long id,
       @AuthenticationPrincipal UserDetails userDetails) {
     boardService.deleteBoard(id, userDetails);
+    return ResponseEntity.ok().build();
+  }
+
+  @PatchMapping("/{id}/recover")
+  public ResponseEntity<Void> recoverBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    boardService.recoverDeletedBoard(id, userDetails);
     return ResponseEntity.ok().build();
   }
 
