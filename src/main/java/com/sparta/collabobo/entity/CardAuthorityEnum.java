@@ -2,11 +2,13 @@ package com.sparta.collabobo.entity;
 
 import com.sparta.collabobo.exception.NotExistsEnumException;
 import java.util.Arrays;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum CardAuthorityEnum {
-    WORKER("worker"), VIEWER("viewer");
+    WORKER("WORKER"), VIEWER("viewer");
 
     private final String value;
 
