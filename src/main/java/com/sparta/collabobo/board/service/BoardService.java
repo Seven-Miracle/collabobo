@@ -28,7 +28,7 @@ public class BoardService {
 
   @Transactional
   public BoardResponseDto createBoard(UserDetails userDetails, BoardRequestDto requestDto) {
-    User user = userRepository.findByNickname(userDetails.getUsername())
+    User user = userRepository.findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
 
     // 보드 이름 중복 체크
@@ -37,8 +37,8 @@ public class BoardService {
       throw new IllegalArgumentException("이미 존재하는 보드 이름입니다.");
     }
 
-    if (requestDto.getTitle().length() < 3 || requestDto.getDescription().length() < 5) {
-      throw new IllegalArgumentException("제목의 길이가 너무 짧거나 많습니다. ");
+    if (requestDto.getTitle().length() < 3 || requestDto.getDescription().length() < 3) {
+      throw new IllegalArgumentException("제목의 길이가 3글자 보다 짧습니다.");
     }
 
     BoardEntity boardEntity = BoardEntity.builder()
@@ -71,7 +71,7 @@ public class BoardService {
 
   @Transactional
   public BoardResponseDto updateBoard(Long boardId, UserDetails userDetails, BoardRequestDto requestDto) {
-    User user = userRepository.findByNickname(userDetails.getUsername())
+    User user = userRepository.findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     BoardEntity boardEntity = boardRepository.findById(boardId)
         .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
@@ -93,7 +93,7 @@ public class BoardService {
 
   @Transactional
   public void deleteBoard(Long boardId, UserDetails userDetails) {
-    User user = userRepository.findByNickname(userDetails.getUsername())
+    User user = userRepository.findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     BoardEntity boardEntity = boardRepository.findById(boardId)
         .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다."));
@@ -102,13 +102,35 @@ public class BoardService {
       throw new IllegalArgumentException("삭제 권한이 없습니다.");
     }
 
-    boardRepository.delete(boardEntity);
+    boardEntity.setDeleted(true);
+    boardEntity.setDeletedDate(LocalDateTime.now());
+    boardRepository.save(boardEntity);
   }
 
   @Transactional
+  public void recoverDeletedBoard(Long boardId, UserDetails userDetails) {
+    User user = userRepository.findByUsername(userDetails.getUsername())
+        .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+    BoardEntity boardEntity = boardRepository.findByIdIgnoringSoftDelete(boardId)
+        .orElseThrow(() -> new IllegalArgumentException("삭제한 보드를 찾을 수 없습니다."));
+
+    if (!boardEntity.getUser().getId().equals(user.getId())) {
+      throw new IllegalArgumentException("복구 권한이 없습니다.");
+    }
+
+    if (!boardEntity.isDeleted()) {
+      throw new IllegalArgumentException("이미 복구된 보드입니다.");
+    }
+
+    boardEntity.setDeleted(false);
+    boardEntity.setDeletedDate(null);
+    boardRepository.save(boardEntity);
+  }
+  @Transactional
   public void inviteUserToBoard(Long boardId, String email, UserDetails userDetails) {
     // 초대하는 사용자
-    User invitingUser = userRepository.findByNickname(userDetails.getUsername())
+    User invitingUser = userRepository.findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new IllegalArgumentException("초대하는 사용자를 찾을 수 없습니다."));
 
     BoardEntity board = boardRepository.findById(boardId)
