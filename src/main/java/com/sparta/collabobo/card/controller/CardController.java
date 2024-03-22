@@ -38,12 +38,13 @@ public class CardController {
     }
 
     // 카드 조회
-    @GetMapping("/boards/{boardId}/cards")
-    public List<CardResponse> getCards(
+    @GetMapping("/boards/{boardId}/cards/{cardId}")
+    public CardResponse getCard(
         @PathVariable Long boardId,
+        @PathVariable Long cardId,
         @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        return cardService.getCards(boardId, userDetails.getUser());
+        return cardService.getCard(boardId, cardId, userDetails.getUser());
     }
 
     // 카드 수정

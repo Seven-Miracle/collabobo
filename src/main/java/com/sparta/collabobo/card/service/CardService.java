@@ -11,7 +11,9 @@ import com.sparta.collabobo.card.requestDto.CardUpdateRequest;
 import com.sparta.collabobo.card.requestDto.StatusUpdateRequest;
 import com.sparta.collabobo.card.responseDto.CardResponse;
 import com.sparta.collabobo.entity.User;
-import java.util.List;
+import com.sparta.collabobo.worker.Worker;
+import com.sparta.collabobo.worker.WorkerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,9 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final BoardRepository boardRepository;
+    private final WorkerRepository workerRepository;
 
+    @Transactional
     public void createCard(Long boardId, CardRequest request, User user) {
 
         BoardEntity board = findBoard(boardId);
@@ -45,46 +49,69 @@ public class CardService {
 
     }
 
-    public List<CardResponse> getCards(Long boardId, User user) {
-        return null;
+    public CardResponse getCard(Long boardId, Long cardId, User user) {
+        BoardEntity board = findBoard(boardId); //해당하는 보드의 카드를 가져와야 함
+        Card card = findCard(cardId);
+        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId())
+            .stream() //그냥 card해도 되는지
+            .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
+        if (isNotMatchedWorker) {
+            throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
+        }
+
+        return cardRepository.cardQuery(cardId);
     }
 
+
+    @Transactional
     public void updateCard(Long cardId, CardUpdateRequest request, User user) {
-
+        Card card = findCard(cardId);
+        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream()
+            .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
+        if (isNotMatchedWorker) {
+            throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
+        }
+        card.updateCard(request.getTitle(), request.getContent());
     }
 
+    @Transactional
     public void deleteCard(
         Long boardId,
         Long cardId,
         User user
     ) {
-        // todo : worker권한이 있는 사용자만 삭제할 수 있는 로직 추가로 넣어야 됨
+        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(cardId).stream()
+            .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
+        if (isNotMatchedWorker) {
+            throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
+        }
         BoardEntity board = findBoard(boardId);
         Card card = findCard(cardId);
         card.softDelete(board, user);
     }
 
+    @Transactional
     public void ChangeCardStatus(Long cardId, StatusUpdateRequest request, User user) {
         Card card = findCard(cardId);
-        // todo : worker권한이 있는 사용자만 삭제할 수 있는 로직 추가로 넣어야 됨
-        //컬럼 상태 예외처리
-        if (CardStatusEnum.isNotExistsStatus(request.getStatus())) {
-            throw new IllegalArgumentException("잘못된 상태 컬럼이 들어왔습니다.");
-        }
-        card.updateCardStatus(request.getStatus());
+        Worker worker = workerRepository.findByCardIdAndUserId(cardId, user.getId())
+            .orElseThrow(() -> new IllegalArgumentException("접근할 수 있는 권한이 없습니다."));
+//        if (CardAuthorityEnum.WORKER.equals(worker.getRole()) && !CardStatusEnum.isNotExistsStatus(
+//            request.getStatus())) {
+//            card.updateCardStatus(request.getStatus());
+//        } else {
+//            throw new IllegalArgumentException("잘못된 상태 컬럼이 들어왔습니다.");
+//        }
+
     }
 
     private BoardEntity findBoard(Long boardId) {
         return boardRepository.findById(boardId)
-            .orElseThrow(() -> new IllegalArgumentException("없는 게시글입니다."));
+            .orElseThrow(() -> new IllegalArgumentException("없는 보드입니다."));
     }
 
     private Card findCard(Long cardId) {
         return cardRepository.findById(cardId)
             .orElseThrow(() -> new IllegalArgumentException("없는 카드입니다."));
     }
-
-    // 중간테이블에서 카드아이디로 조회
-    // 카드에 참여한 유저 아이디가 리스트형태로 옴
 
 }
