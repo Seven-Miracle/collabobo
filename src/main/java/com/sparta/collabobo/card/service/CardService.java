@@ -5,18 +5,15 @@ import com.sparta.collabobo.board.repository.BoardRepository;
 import com.sparta.collabobo.card.entity.Card;
 import com.sparta.collabobo.card.entity.CardColorEnum;
 import com.sparta.collabobo.card.entity.CardStatusEnum;
-import com.sparta.collabobo.card.repository.CardQueryImpl;
 import com.sparta.collabobo.card.repository.CardRepository;
 import com.sparta.collabobo.card.requestDto.CardRequest;
 import com.sparta.collabobo.card.requestDto.CardUpdateRequest;
 import com.sparta.collabobo.card.requestDto.StatusUpdateRequest;
 import com.sparta.collabobo.card.responseDto.CardResponse;
-import com.sparta.collabobo.entity.CardAuthorityEnum;
 import com.sparta.collabobo.entity.User;
 import com.sparta.collabobo.worker.Worker;
 import com.sparta.collabobo.worker.WorkerRepository;
 import jakarta.transaction.Transactional;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -55,20 +52,23 @@ public class CardService {
     public CardResponse getCard(Long boardId, Long cardId, User user) {
         BoardEntity board = findBoard(boardId); //해당하는 보드의 카드를 가져와야 함
         Card card = findCard(cardId);
-        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream() //그냥 card해도 되는지
+        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId())
+            .stream() //그냥 card해도 되는지
             .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
-        if(isNotMatchedWorker) {
+        if (isNotMatchedWorker) {
             throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
         }
 
         return cardRepository.cardQuery(cardId);
     }
 
+
+    @Transactional
     public void updateCard(Long cardId, CardUpdateRequest request, User user) {
         Card card = findCard(cardId);
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream()
             .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
-        if(isNotMatchedWorker) {
+        if (isNotMatchedWorker) {
             throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
         }
         card.updateCard(request.getTitle(), request.getContent());
@@ -82,7 +82,7 @@ public class CardService {
     ) {
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(cardId).stream()
             .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
-        if(isNotMatchedWorker) {
+        if (isNotMatchedWorker) {
             throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
         }
         BoardEntity board = findBoard(boardId);
