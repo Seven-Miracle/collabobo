@@ -3,6 +3,7 @@ package com.sparta.collabobo.comment.controller;
 
 import com.sparta.collabobo.comment.entity.Comment;
 import com.sparta.collabobo.comment.requestDto.CommentRequest;
+import com.sparta.collabobo.comment.responseDto.CommentResponse;
 import com.sparta.collabobo.comment.service.CommentService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class CommentController {
     }
 
     @PostMapping("/{cardId}/comments")
-    public Comment createComment(@PathVariable Long cardId,
+    public CommentResponse createComment(@PathVariable Long cardId,
                                  @RequestBody CommentRequest commentDto,
                                  @RequestHeader(value = "Authorization") String token) {
         return commentService.createComment(cardId, commentDto, token);
     }
 
     @GetMapping("/{cardId}/comments")
-    public List<Comment> getCommentsByCardId(@PathVariable Long cardId) {
+    public List<CommentResponse> getCommentsByCardId(@PathVariable Long cardId) {
         return commentService.getCommentsByCardId(cardId);
     }
 }
