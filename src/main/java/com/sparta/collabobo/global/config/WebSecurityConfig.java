@@ -1,4 +1,4 @@
-package com.sparta.collabobo.config;
+package com.sparta.collabobo.global.config;
 
 import com.sparta.collabobo.jwt.JwtAuthenticationFilter;
 import com.sparta.collabobo.jwt.JwtAuthorizationFilter;

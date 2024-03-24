@@ -1,4 +1,4 @@
-package com.sparta.collabobo.exception;
+package com.sparta.collabobo.global.exception;
 
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;

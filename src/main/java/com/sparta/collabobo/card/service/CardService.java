@@ -11,7 +11,7 @@ import com.sparta.collabobo.card.requestDto.CardUpdateRequest;
 import com.sparta.collabobo.card.requestDto.StatusUpdateRequest;
 import com.sparta.collabobo.card.responseDto.CardResponse;
 import com.sparta.collabobo.entity.User;
-import com.sparta.collabobo.worker.Worker;
+import com.sparta.collabobo.global.aop.Lock;
 import com.sparta.collabobo.worker.WorkerRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,9 @@ public class CardService {
 
     }
 
+
     public CardResponse getCard(Long boardId, Long cardId, User user) {
-        BoardEntity board = findBoard(boardId); //해당하는 보드의 카드를 가져와야 함
+        findBoard(boardId); //해당하는 보드의 카드를 가져와야 함
         Card card = findCard(cardId);
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId())
             .stream() //그냥 card해도 되는지
@@ -58,11 +59,13 @@ public class CardService {
         if (isNotMatchedWorker) {
             throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
         }
-
-        return cardRepository.cardQuery(cardId);
+        return cardRepository.cardQuery(cardId); // todo : boardId까지
     }
+    // todo : User 가져와야 하는 이유?
+    // todo : getCard로 넘어가기 전에 exception처리 해줘야하나?
 
 
+    @Lock
     @Transactional
     public void updateCard(Long cardId, CardUpdateRequest request, User user) {
         Card card = findCard(cardId);
@@ -71,15 +74,14 @@ public class CardService {
         if (isNotMatchedWorker) {
             throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
         }
-        card.updateCard(request.getTitle(), request.getContent());
+        card.updateCard(
+            request.getTitle(),
+            request.getContent());
     }
 
+    @Lock
     @Transactional
-    public void deleteCard(
-        Long boardId,
-        Long cardId,
-        User user
-    ) {
+    public void deleteCard(Long boardId, Long cardId, User user) {
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(cardId).stream()
             .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
         if (isNotMatchedWorker) {
@@ -90,11 +92,21 @@ public class CardService {
         card.softDelete(board, user);
     }
 
+    @Lock
     @Transactional
     public void ChangeCardStatus(Long cardId, StatusUpdateRequest request, User user) {
         Card card = findCard(cardId);
-        Worker worker = workerRepository.findByCardIdAndUserId(cardId, user.getId())
-            .orElseThrow(() -> new IllegalArgumentException("접근할 수 있는 권한이 없습니다."));
+        boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream()
+            .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
+        if (isNotMatchedWorker) {
+            throw new IllegalArgumentException("해당 카드의 작업자가 아닙니다.");
+        }
+        card.updateCardStatus(
+            request.getStatus()
+        );
+
+//        Worker worker = workerRepository.findByCardIdAndUserId(cardId, user.getId())
+//            .orElseThrow(() -> new IllegalArgumentException("접근할 수 있는 권한이 없습니다."));
 //        if (CardAuthorityEnum.WORKER.equals(worker.getRole()) && !CardStatusEnum.isNotExistsStatus(
 //            request.getStatus())) {
 //            card.updateCardStatus(request.getStatus());
