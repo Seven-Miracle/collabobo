@@ -65,7 +65,7 @@ public class CardService {
     // todo : getCard로 넘어가기 전에 exception처리 해줘야하나?
 
 
-
+    @Lock
     @Transactional
     public void updateCard(Long cardId, CardUpdateRequest request, User user) {
         Card card = findCard(cardId);
@@ -79,7 +79,7 @@ public class CardService {
             request.getContent());
     }
 
-
+    @Lock
     @Transactional
     public void deleteCard(Long boardId, Long cardId, User user) {
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(cardId).stream()
@@ -92,7 +92,7 @@ public class CardService {
         card.softDelete(board, user);
     }
 
-
+    @Lock
     @Transactional
     public void ChangeCardStatus(Long cardId, StatusUpdateRequest request, User user) {
         Card card = findCard(cardId);
