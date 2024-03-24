@@ -1,4 +1,4 @@
-package com.sparta.collabobo.config;
+package com.sparta.collabobo.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

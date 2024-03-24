@@ -1,4 +1,4 @@
-package com.sparta.collabobo.config;
+package com.sparta.collabobo.global.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

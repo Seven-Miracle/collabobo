@@ -1,4 +1,4 @@
-package com.sparta.collabobo.exception;
+package com.sparta.collabobo.global.exception;
 
 public class NotExistsUserException extends RuntimeException {
     public NotExistsUserException() {

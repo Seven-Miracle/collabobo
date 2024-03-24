@@ -1,4 +1,4 @@
-package com.sparta.collabobo.exception;
+package com.sparta.collabobo.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
