@@ -15,7 +15,7 @@ public class WorkerQueryImpl implements WorkerQuery {
     public List<Worker> findWorkersInCard(Long cardId) {
         return queryFactory
             .selectFrom(worker)
-            .where(worker.id.eq(cardId))
+            .where(worker.card.id.eq(cardId))
             .fetch();
     }
 }
