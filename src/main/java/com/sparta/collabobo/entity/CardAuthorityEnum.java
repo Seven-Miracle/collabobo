@@ -1,7 +1,5 @@
 package com.sparta.collabobo.entity;
 
-import com.sparta.collabobo.exception.NotExistsEnumException;
-import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
