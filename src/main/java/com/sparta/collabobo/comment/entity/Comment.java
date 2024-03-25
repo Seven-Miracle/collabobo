@@ -22,6 +22,7 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id")
     private Long commentId;
 
     @ManyToOne
@@ -46,11 +47,6 @@ public class Comment {
         this.user = user;
         this.card = card;
         this.createdAt = LocalDateTime.now();
-    }
-
-    public void updateContent(String content) {
-        this.content = content;
-        this.modifiedAt = LocalDateTime.now(); // 수정 시간을 현재 시간으로 업데이트
     }
 
 
