@@ -26,6 +26,7 @@ public class CardQueryImpl implements CardQuery {
         List<CommentResponse> getComments = queryFactory
             .select(
                 Projections.constructor(CommentResponse.class,
+                    comment.commentId,
                     comment.content,
                     comment.createdAt))
             .from(comment)
