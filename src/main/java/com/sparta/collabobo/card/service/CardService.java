@@ -66,7 +66,6 @@ public class CardService {
 
 
     @Lock
-    @Transactional
     public void updateCard(Long cardId, CardUpdateRequest request, User user) {
         Card card = findCard(cardId);
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream()
@@ -80,7 +79,6 @@ public class CardService {
     }
 
     @Lock
-    @Transactional
     public void deleteCard(Long boardId, Long cardId, User user) {
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(cardId).stream()
             .noneMatch(worker -> worker.getUser().getId().equals(user.getId()));
@@ -93,7 +91,6 @@ public class CardService {
     }
 
     @Lock
-    @Transactional
     public void ChangeCardStatus(Long cardId, StatusUpdateRequest request, User user) {
         Card card = findCard(cardId);
         boolean isNotMatchedWorker = workerRepository.findWorkersInCard(card.getId()).stream()
